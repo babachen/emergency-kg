@@ -1,0 +1,13 @@
+import http from './http'
+export const getRegions = () => http.get('/api/regions')
+export const getDocuments = (params) => http.get('/api/documents', { params })
+export const getDocumentDetail = (id) => http.get(`/api/documents/${id}`)
+export const createDocument = (data) => http.post('/api/documents', data)
+export const updateDocument = (id, data) => http.put(`/api/documents/${id}`, data)
+export const deleteDocument = (id) => http.delete(`/api/documents/${id}`)
+export const preprocessDocument = (id) => http.post(`/api/documents/${id}/preprocess`)
+export const getSections = (id) => http.get(`/api/documents/${id}/sections`)
+export const uploadFile = (formData) => http.post('/api/files/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+export const getTasks = (params) => http.get('/api/extraction/tasks', { params })
+export const createTask = (data) => http.post('/api/extraction/tasks', data)
+export const executeTask = (id) => http.post(`/api/extraction/tasks/${id}/execute`)

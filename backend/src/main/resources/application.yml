@@ -1,0 +1,47 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: emergency-kg-backend
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/emergency_kg?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 60MB
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+app:
+  jwt:
+    secret: emergency-kg-demo-secret-key-please-change-32bytes
+    expire-hours: 24
+  storage:
+    location: ${user.dir}/uploads
+    access-path: /uploads
+  ai:
+    provider: mock
+    base-url: http://aichat.bysj.site
+    project-id: emergency_plan_kg
+    timeout-ms: 60000
+    mock-enabled: true
+  neo4j:
+    enabled: false
+    uri: bolt://127.0.0.1:7687
+    username: neo4j
+    password: 12345678
