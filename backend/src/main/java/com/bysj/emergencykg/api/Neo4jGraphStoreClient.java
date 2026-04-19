@@ -40,25 +40,32 @@ public class Neo4jGraphStoreClient implements GraphStoreClient {
     }
 
     @Override
-    public KgVO.GraphVO queryGraph(Long regionId, Long documentId, String keyword) {
+    public KgVO.GraphVO queryGraph(Long regionId, Long documentId, String keyword, long current, long pageSize) {
         if (!available()) {
-            return mysqlGraphStoreClient.queryGraph(regionId, documentId, keyword);
+            return mysqlGraphStoreClient.queryGraph(regionId, documentId, keyword, current, pageSize);
         }
-        String cypher = "MATCH (s:" + ENTITY_LABEL + ")-[r:" + RELATION_TYPE + "]->(o:" + ENTITY_LABEL + ") "
+        String filter = "MATCH (s:" + ENTITY_LABEL + ")-[r:" + RELATION_TYPE + "]->(o:" + ENTITY_LABEL + ") "
                 + "WHERE ($regionId IS NULL OR r.regionId = $regionId) "
                 + "AND ($documentId IS NULL OR r.documentId = $documentId) "
-                + "AND ($keyword = '' OR s.entityName CONTAINS $keyword OR r.predicate CONTAINS $keyword OR o.entityName CONTAINS $keyword) "
+                + "AND ($keyword = '' OR s.entityName CONTAINS $keyword OR r.predicate CONTAINS $keyword OR o.entityName CONTAINS $keyword) ";
+        String cypher = filter
                 + "RETURN s.entityName AS source, coalesce(s.category, '实体') AS sourceCategory, "
                 + "o.entityName AS target, coalesce(o.category, '实体') AS targetCategory, "
                 + "r.predicate AS predicate, r.documentId AS sourceId "
-                + "ORDER BY r.documentId, r.tripleId LIMIT 240";
+                + "ORDER BY r.documentId, r.tripleId SKIP $skip LIMIT $limit";
         Map<String, Object> params = new LinkedHashMap<>();
         params.put("regionId", regionId);
         params.put("documentId", documentId);
         params.put("keyword", StringUtils.hasText(keyword) ? keyword.trim() : "");
+        params.put("skip", Math.max(0, (current - 1) * pageSize));
+        params.put("limit", pageSize);
         try (Session session = driver.session()) {
+            long total = session.run(filter + "RETURN count(r) AS total", params).single().get("total").asLong();
             List<Record> records = session.run(cypher, params).list();
             KgVO.GraphVO vo = new KgVO.GraphVO();
+            vo.setTotal(total);
+            vo.setCurrent(current);
+            vo.setPageSize(pageSize);
             Map<String, KgVO.GraphNodeVO> nodes = new LinkedHashMap<>();
             for (Record record : records) {
                 String source = record.get("source").asString("");
@@ -76,15 +83,15 @@ public class Neo4jGraphStoreClient implements GraphStoreClient {
             }
             vo.setNodes(new ArrayList<>(nodes.values()));
             vo.setCypherRows(records.stream().limit(20).map(this::toMap).collect(Collectors.toList()));
-            if (vo.getLinks().isEmpty()) {
-                KgVO.GraphVO fallback = mysqlGraphStoreClient.queryGraph(regionId, documentId, keyword);
+            if (vo.getLinks().isEmpty() && total == 0) {
+                KgVO.GraphVO fallback = mysqlGraphStoreClient.queryGraph(regionId, documentId, keyword, current, pageSize);
                 fallback.setMessage("Neo4j 当前暂无已同步图谱快照，已自动回退；" + fallback.getMessage());
                 return fallback;
             }
-            vo.setMessage("当前使用 Neo4j 图数据库查询，共返回 " + vo.getNodes().size() + " 个节点、" + vo.getLinks().size() + " 条关系");
+            vo.setMessage("当前使用 Neo4j 图数据库查询，第 " + current + " 页返回 " + vo.getNodes().size() + " 个节点、" + vo.getLinks().size() + " 条关系，共 " + total + " 条关系");
             return vo;
         } catch (Exception ex) {
-            KgVO.GraphVO fallback = mysqlGraphStoreClient.queryGraph(regionId, documentId, keyword);
+            KgVO.GraphVO fallback = mysqlGraphStoreClient.queryGraph(regionId, documentId, keyword, current, pageSize);
             fallback.setMessage("Neo4j 图查询失败，已自动回退；" + fallback.getMessage() + "；原因：" + ex.getMessage());
             return fallback;
         }

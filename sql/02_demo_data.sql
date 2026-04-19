@@ -146,6 +146,9 @@ INSERT INTO `tmp_entity_template` (`slot`,`entity_name`,`entity_type_id`,`use_re
 (13,'应急通信设备',3,0,'用于多部门协同联络'),
 (14,'无人机',3,0,'用于巡查侦察和灾情回传');
 
+CREATE TEMPORARY TABLE `tmp_entity_template_obj` AS
+SELECT * FROM `tmp_entity_template`;
+
 CREATE TEMPORARY TABLE `tmp_relation_template` (
   `slot` INT PRIMARY KEY,
   `subject_slot` INT NOT NULL,
@@ -324,7 +327,7 @@ SELECT
 FROM `region` r
 JOIN `tmp_relation_template` rel
 JOIN `tmp_entity_template` subj ON subj.slot = rel.subject_slot
-JOIN `tmp_entity_template` obj ON obj.slot = rel.object_slot
+JOIN `tmp_entity_template_obj` obj ON obj.slot = rel.object_slot
 ORDER BY r.id, rel.slot;
 
 INSERT INTO `knowledge_conflict` (`id`,`triple_id`,`conflict_type`,`conflict_desc`,`status`,`suggested_resolution`,`create_time`,`update_time`) VALUES
@@ -396,4 +399,5 @@ INSERT INTO `sys_operation_log` (`id`,`module_name`,`operation_type`,`operator_n
 (6,'图谱版本','创建','系统管理员',1,'创建图谱版本：31省整合演示版，并支持 Neo4j 同步','127.0.0.1',NOW());
 
 DROP TEMPORARY TABLE IF EXISTS `tmp_relation_template`;
+DROP TEMPORARY TABLE IF EXISTS `tmp_entity_template_obj`;
 DROP TEMPORARY TABLE IF EXISTS `tmp_entity_template`;

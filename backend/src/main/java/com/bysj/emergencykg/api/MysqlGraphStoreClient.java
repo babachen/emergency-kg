@@ -28,12 +28,14 @@ public class MysqlGraphStoreClient implements GraphStoreClient {
     }
 
     @Override
-    public KgVO.GraphVO queryGraph(Long regionId, Long documentId, String keyword) {
+    public KgVO.GraphVO queryGraph(Long regionId, Long documentId, String keyword, long current, long pageSize) {
         Set<Long> docIds = null;
         if (regionId != null) {
             docIds = planDocumentMapper.selectList(new LambdaQueryWrapper<PlanDocument>().eq(PlanDocument::getRegionId, regionId)).stream().map(PlanDocument::getId).collect(Collectors.toSet());
             if (docIds.isEmpty()) {
                 KgVO.GraphVO empty = new KgVO.GraphVO();
+                empty.setCurrent(current);
+                empty.setPageSize(pageSize);
                 empty.setMessage("当前区域暂无已入库图谱数据");
                 return empty;
             }
@@ -42,9 +44,14 @@ public class MysqlGraphStoreClient implements GraphStoreClient {
                 .eq(documentId != null, KgTriple::getSourceDocumentId, documentId)
                 .in(docIds != null, KgTriple::getSourceDocumentId, docIds)
                 .and(StringUtils.hasText(keyword), w -> w.like(KgTriple::getSubjectName, keyword).or().like(KgTriple::getPredicateName, keyword).or().like(KgTriple::getObjectName, keyword))
-                .orderByDesc(KgTriple::getCreateTime).last("limit 120");
-        List<KgTriple> triples = kgTripleMapper.selectList(wrapper);
+                .orderByDesc(KgTriple::getCreateTime).last("limit 500");
+        List<KgTriple> allTriples = kgTripleMapper.selectList(wrapper);
+        long offset = Math.max(0, (current - 1) * pageSize);
+        List<KgTriple> triples = allTriples.stream().skip(offset).limit(pageSize).collect(Collectors.toList());
         KgVO.GraphVO vo = new KgVO.GraphVO();
+        vo.setTotal((long) allTriples.size());
+        vo.setCurrent(current);
+        vo.setPageSize(pageSize);
         Map<String, KgVO.GraphNodeVO> nodes = new LinkedHashMap<>();
         for (KgTriple triple : triples) {
             nodes.computeIfAbsent(triple.getSubjectName(), key -> node(key, "实体"));
@@ -56,7 +63,7 @@ public class MysqlGraphStoreClient implements GraphStoreClient {
             vo.getLinks().add(link);
         }
         vo.setNodes(new ArrayList<>(nodes.values()));
-        vo.setMessage("当前使用 MySQL 图谱降级查询，共返回 " + vo.getNodes().size() + " 个节点、" + vo.getLinks().size() + " 条关系");
+        vo.setMessage("当前使用 MySQL 图谱降级查询，第 " + current + " 页返回 " + vo.getNodes().size() + " 个节点、" + vo.getLinks().size() + " 条关系，共 " + vo.getTotal() + " 条关系");
         return vo;
     }
 

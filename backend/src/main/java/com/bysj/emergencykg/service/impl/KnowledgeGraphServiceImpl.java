@@ -143,7 +143,7 @@ public class KnowledgeGraphServiceImpl implements KnowledgeGraphService {
 
     @Override
     public KgVO.GraphVO graphView(KgDTO.GraphQueryDTO queryDTO) {
-        return graphClient().queryGraph(queryDTO.getRegionId(), queryDTO.getDocumentId(), queryDTO.getKeyword());
+        return graphClient().queryGraph(queryDTO.getRegionId(), queryDTO.getDocumentId(), queryDTO.getKeyword(), queryDTO.getCurrent(), queryDTO.getPageSize());
     }
 
     @Override

@@ -29,7 +29,7 @@ public class KgDTO {
         private String keyword;
     }
     @Data
-    public static class GraphQueryDTO {
+    public static class GraphQueryDTO extends PageQuery {
         private Long regionId;
         private Long documentId;
         private String keyword;

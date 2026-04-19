@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface GraphStoreClient {
     boolean available();
-    KgVO.GraphVO queryGraph(Long regionId, Long documentId, String keyword);
+    KgVO.GraphVO queryGraph(Long regionId, Long documentId, String keyword, long current, long pageSize);
     Map<String, Object> executeCypher(String cypher);
     void syncVersion(Long versionId, List<KgVO.TripleVO> triples);
 }
