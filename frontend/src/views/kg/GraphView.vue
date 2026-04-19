@@ -2,7 +2,20 @@
   <div>
     <div class="page-card">
       <div class="page-header"><div class="page-title">图谱检索与可视化</div></div>
-      <el-form :inline="true" :model="query"><el-form-item label="关键词"><el-input v-model="query.keyword" /></el-form-item><el-form-item><el-button type="primary" @click="loadGraph">检索图谱</el-button></el-form-item></el-form>
+      <el-form :inline="true" :model="query">
+        <el-form-item label="区域">
+          <el-select v-model="query.regionId" clearable style="width: 180px" @change="handleRegionChange">
+            <el-option v-for="item in regions" :key="item.id" :label="item.regionName" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="预案">
+          <el-select v-model="query.documentId" clearable filterable style="width: 280px">
+            <el-option v-for="item in documents" :key="item.id" :label="item.title" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="关键词"><el-input v-model="query.keyword" placeholder="实体、关系或资源关键词" /></el-form-item>
+        <el-form-item><el-button type="primary" @click="loadGraph">检索图谱</el-button></el-form-item>
+      </el-form>
       <div ref="graphRef" style="height: 520px; margin-top: 16px"></div>
       <el-alert :title="graph.message || '图谱检索结果'" type="info" :closable="false" style="margin-top: 12px" />
     </div>
@@ -19,16 +32,28 @@
 <script setup>
 import * as echarts from 'echarts'
 import { onMounted, reactive, ref } from 'vue'
+import { getDocuments, getRegions } from '../../api/document'
 import { execCypher, getGraph } from '../../api/kg'
 const graphRef = ref()
 const graph = reactive({ nodes: [], links: [], message: '' })
-const query = reactive({ keyword: '' })
+const regions = ref([])
+const documents = ref([])
+const query = reactive({ regionId: undefined, documentId: undefined, keyword: '' })
 const cypher = ref('MATCH (n) RETURN n LIMIT 10')
 const cypherResult = reactive({ message: '', rows: [] })
 const renderGraph = () => {
   echarts.init(graphRef.value).setOption({ tooltip: {}, legend: [{ data: ['实体'] }], series: [{ type: 'graph', layout: 'force', roam: true, draggable: true, data: graph.nodes, links: graph.links, force: { repulsion: 220, edgeLength: 130 }, label: { show: true }, edgeLabel: { show: true, formatter: '{c}' } }] })
 }
+const loadRegions = async () => { regions.value = await getRegions() }
+const loadDocuments = async () => {
+  const { records } = await getDocuments({ current: 1, pageSize: 200, regionId: query.regionId })
+  documents.value = records
+}
+const handleRegionChange = async () => {
+  query.documentId = undefined
+  await loadDocuments()
+}
 const loadGraph = async () => { Object.assign(graph, await getGraph(query)); renderGraph() }
 const runCypher = async () => { Object.assign(cypherResult, await execCypher({ cypher: cypher.value })) }
-onMounted(loadGraph)
+onMounted(async () => { await loadRegions(); await loadDocuments(); await loadGraph() })
 </script>

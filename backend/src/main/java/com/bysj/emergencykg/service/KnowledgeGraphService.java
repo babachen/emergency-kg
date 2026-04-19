@@ -29,4 +29,5 @@ public interface KnowledgeGraphService {
     void applyCompletion(Long id);
     PageResult<KgVO.VersionVO> pageVersions(PageQuery pageQuery);
     void createVersion(KgDTO.VersionSaveDTO dto);
+    void syncGraphStoreSnapshot(String trigger);
 }

@@ -107,88 +107,6 @@ INSERT INTO `region` (`id`,`region_code`,`region_name`,`region_level`,`parent_id
 (30,'64','宁夏回族自治区','省级',0,30,1,NOW(),NOW()),
 (31,'65','新疆维吾尔自治区','省级',0,31,1,NOW(),NOW());
 
-INSERT INTO `plan_document` (`id`,`title`,`region_id`,`plan_year`,`plan_type`,`source_url`,`file_id`,`file_name`,`file_path`,`content`,`preprocess_status`,`extraction_status`,`publish_org`,`approval_date`,`version_no`,`summary`,`create_by`,`create_time`,`update_time`) VALUES
-(1,'北京市防汛防台风应急预案',1,2026,'防汛应急预案','https://example.com/beijing',NULL,NULL,NULL,'一、总则
-北京市防汛指挥部负责统一指挥预警发布、险情研判和应急响应。
-二、组织体系
-市应急管理局会同市气象局、市水务局开展会商。
-三、处置措施
-遇到强降雨时组织人员转移，调用冲锋舟、沙袋和应急照明设备。',1,3,'北京市应急管理局','2026-02-10','V1.0','覆盖预警发布、人员转移、物资调度等关键环节。',1,NOW(),NOW()),
-(2,'天津市城市防汛应急预案',2,2026,'防汛应急预案','https://example.com/tianjin',NULL,NULL,NULL,'一、工作原则
-天津市防汛指挥部负责统筹指挥。
-二、职责分工
-气象局负责监测预报，水务局负责堤防巡查。
-三、保障措施
-组织抢险队伍开展人员疏散与物资调配。',1,3,'天津市应急管理局','2026-02-12','V1.1','突出城市内涝防控与联动会商机制。',1,NOW(),NOW()),
-(3,'河北省防汛抗旱应急预案',3,2026,'防汛应急预案','https://example.com/hebei',NULL,NULL,NULL,'一、总则
-河北省防汛抗旱指挥部负责统筹防汛抗旱工作。
-二、监测预警
-气象部门与水利部门协同开展风险研判和预警发布。
-三、应急处置
-需要时转移危险区群众，启用应急物资仓库。',1,3,'河北省应急管理厅','2026-02-20','V1.0','适用于汛期强降雨、山洪灾害和内涝场景。',1,NOW(),NOW()),
-(4,'江苏省防汛防旱应急预案',10,2026,'防汛应急预案','https://example.com/jiangsu',NULL,NULL,NULL,'一、组织指挥
-江苏省防汛指挥部负责统一调度。
-二、响应机制
-响应前先完成风险研判和预警发布。
-三、资源保障
-调用应急通信设备、冲锋舟和排涝泵站。',1,3,'江苏省应急管理厅','2026-03-01','V2.0','强化风险研判前置与资源调度效率。',1,NOW(),NOW()),
-(5,'浙江省防汛防台抗旱应急预案',11,2026,'防汛应急预案','https://example.com/zhejiang',1,'浙江省防汛应急预案.txt','/demo/files/zhejiang_plan.txt','一、总则
-浙江省防汛防台抗旱指挥部负责统一领导和指挥。
-二、会商研判
-气象局、水利厅、应急管理厅协同开展会商。
-三、应急响应
-组织预警发布、人员转移、应急通信保障和物资调度。',1,3,'浙江省应急管理厅','2026-03-05','V2.1','适用于台风、强降雨、山洪及城市内涝场景。',1,NOW(),NOW()),
-(6,'安徽省防汛应急预案',12,2026,'防汛应急预案','https://example.com/anhui',NULL,NULL,NULL,'一、组织体系
-安徽省防汛抗旱指挥部负责总体协调。
-二、预警研判
-气象部门和水文部门联合研判。
-三、处置措施
-调用沙袋、照明设备和救援队伍开展抢险。',1,1,'安徽省应急管理厅','2026-03-08','V1.2','突出洪水与内涝双场景协同。',1,NOW(),NOW()),
-(7,'湖北省防汛抗洪应急预案',17,2026,'防汛应急预案','https://example.com/hubei',NULL,NULL,NULL,'一、总则
-湖北省防汛抗旱指挥部负责组织指挥。
-二、职责
-水利部门负责堤防险情处置，应急部门负责救援力量协调。
-三、响应
-组织巡查、转移群众和启用物资仓库。',1,1,'湖北省应急管理厅','2026-03-11','V1.0','适用于流域洪水和堤防险情。',1,NOW(),NOW()),
-(8,'广东省防汛防风应急预案',19,2026,'防汛应急预案','https://example.com/guangdong',2,'广东省防汛应急预案.txt','/demo/files/guangdong_plan.txt','一、总则
-广东省防总负责统一指挥。
-二、会商联动
-气象局、海洋部门和应急管理厅协同会商。
-三、处置措施
-组织沿海危险区域人员转移并调用通信和照明设备。',1,3,'广东省应急管理厅','2026-03-15','V2.0','强调台风叠加暴雨的跨部门联动机制。',1,NOW(),NOW()),
-(9,'四川省山洪灾害防御应急预案',23,2026,'山洪防御预案','https://example.com/sichuan',NULL,NULL,NULL,'一、总则
-四川省山洪灾害防御指挥部负责统筹。
-二、预警发布
-自然资源、气象、水利部门联合发布山洪预警。
-三、应急响应
-组织转移避险、物资调配与通信保障。',1,2,'四川省应急管理厅','2026-03-18','V1.0','突出山洪地灾联动处置。',1,NOW(),NOW()),
-(10,'广西壮族自治区防汛应急预案',20,2026,'防汛应急预案','https://example.com/guangxi',NULL,NULL,NULL,'一、总则
-自治区防汛抗旱指挥部负责统一领导。
-二、应急响应
-先开展风险研判，再组织预警发布和群众转移。
-三、保障措施
-调用冲锋舟、编织袋、应急发电设备。',1,4,'广西壮族自治区应急管理厅','2026-03-21','V1.0','当前处于抽取失败示例状态，便于答辩演示。',1,NOW(),NOW());
-
-INSERT INTO `plan_section` (`id`,`document_id`,`section_no`,`section_title`,`section_level`,`section_content`,`word_count`,`create_time`,`update_time`) VALUES
-(1,1,'S001','一、总则',1,'北京市防汛指挥部负责统一指挥预警发布、险情研判和应急响应。',33,NOW(),NOW()),
-(2,1,'S002','二、组织体系',1,'市应急管理局会同市气象局、市水务局开展会商。',24,NOW(),NOW()),
-(3,1,'S003','三、处置措施',1,'遇到强降雨时组织人员转移，调用冲锋舟、沙袋和应急照明设备。',32,NOW(),NOW()),
-(4,5,'S001','一、总则',1,'浙江省防汛防台抗旱指挥部负责统一领导和指挥。',24,NOW(),NOW()),
-(5,5,'S002','二、会商研判',1,'气象局、水利厅、应急管理厅协同开展会商。',22,NOW(),NOW()),
-(6,5,'S003','三、应急响应',1,'组织预警发布、人员转移、应急通信保障和物资调度。',28,NOW(),NOW()),
-(7,8,'S001','一、总则',1,'广东省防总负责统一指挥。',12,NOW(),NOW()),
-(8,8,'S002','二、会商联动',1,'气象局、海洋部门和应急管理厅协同会商。',21,NOW(),NOW()),
-(9,8,'S003','三、处置措施',1,'组织沿海危险区域人员转移并调用通信和照明设备。',27,NOW(),NOW()),
-(10,10,'S001','一、总则',1,'自治区防汛抗旱指挥部负责统一领导。',18,NOW(),NOW());
-
-INSERT INTO `extraction_task` (`id`,`document_id`,`task_name`,`model_name`,`prompt_template`,`task_status`,`progress_percent`,`extracted_count`,`started_at`,`finished_at`,`error_message`,`create_by`,`create_time`,`update_time`) VALUES
-(1,1,'北京预案首轮抽取','应急抽取助手-Mock','请抽取主体、任务、资源与关系三元组',2,100,6,NOW(),NOW(),NULL,1,NOW(),NOW()),
-(2,5,'浙江预案首轮抽取','应急抽取助手-Mock','请抽取主体、任务、资源与关系三元组',2,100,7,NOW(),NOW(),NULL,1,NOW(),NOW()),
-(3,8,'广东预案跨部门抽取','应急抽取助手-Mock','强调沿海台风与暴雨联动主体抽取',2,100,6,NOW(),NOW(),NULL,1,NOW(),NOW()),
-(4,9,'四川山洪预案抽取','应急抽取助手-Mock','突出山洪预警、转移避险和通信保障',1,55,3,NOW(),NULL,NULL,3,NOW(),NOW()),
-(5,10,'广西预案失败示例','应急抽取助手-Mock','执行抽取并展示失败状态',3,100,0,NOW(),NOW(),'示例：原始文本缺少可识别结构，需人工补录正文。',3,NOW(),NOW()),
-(6,6,'安徽预案待执行任务','应急抽取助手-Mock','待执行的补充抽取任务',0,0,0,NULL,NULL,NULL,3,NOW(),NOW());
-
 INSERT INTO `entity_type` (`id`,`type_code`,`type_name`,`color`,`description`,`create_time`,`update_time`) VALUES
 (1,'机构','机构','#3b82f6','应急管理部门、气象部门、水利部门、指挥部等',NOW(),NOW()),
 (2,'任务','任务','#8b5cf6','预警发布、人员转移、风险研判等应急任务',NOW(),NOW()),
@@ -204,70 +122,278 @@ INSERT INTO `relation_type` (`id`,`relation_code`,`relation_name`,`description`,
 (4,'前置','前置','任务之间存在前置依赖关系','任务 -> 任务',NOW(),NOW()),
 (5,'后置','后置','任务之间存在后续依赖关系','任务 -> 任务',NOW(),NOW());
 
-INSERT INTO `kg_entity` (`id`,`entity_name`,`entity_type_id`,`region_id`,`source_document_id`,`description`,`confidence`,`status`,`create_time`,`update_time`) VALUES
-(1,'北京市防汛指挥部',1,1,1,'负责北京市预警发布与应急响应',0.92,1,NOW(),NOW()),
-(2,'预警发布',2,1,1,'应急预警任务',0.95,1,NOW(),NOW()),
-(3,'人员转移',2,1,1,'群众转移避险任务',0.93,1,NOW(),NOW()),
-(4,'冲锋舟',3,1,1,'水上救援装备',0.90,1,NOW(),NOW()),
-(5,'浙江省防汛防台抗旱指挥部',1,11,5,'浙江省防汛防台统一指挥主体',0.94,1,NOW(),NOW()),
-(6,'浙江省应急管理厅',1,11,5,'浙江省应急管理主体',0.91,1,NOW(),NOW()),
-(7,'防汛物资仓库',3,11,5,'物资调配节点',0.88,1,NOW(),NOW()),
-(8,'广东省防总',1,19,8,'广东省防汛防风总指挥主体',0.93,1,NOW(),NOW()),
-(9,'应急通信保障',2,19,8,'通信保障任务',0.89,1,NOW(),NOW()),
-(10,'应急照明设备',3,19,8,'夜间救援设备',0.87,1,NOW(),NOW()),
-(11,'风险研判',2,10,4,'处置前置任务',0.92,1,NOW(),NOW()),
-(12,'江苏省防汛指挥部',1,10,4,'江苏省统一调度主体',0.90,1,NOW(),NOW());
+CREATE TEMPORARY TABLE `tmp_entity_template` (
+  `slot` INT PRIMARY KEY,
+  `entity_name` VARCHAR(100) NOT NULL,
+  `entity_type_id` BIGINT NOT NULL,
+  `use_region_prefix` TINYINT NOT NULL,
+  `description` VARCHAR(255) NOT NULL
+);
 
-INSERT INTO `kg_relation` (`id`,`subject_entity_id`,`relation_type_id`,`object_entity_id`,`source_document_id`,`relation_desc`,`confidence`,`create_time`,`update_time`) VALUES
-(1,1,1,2,1,'负责',0.92,NOW(),NOW()),
-(2,1,1,3,1,'负责',0.91,NOW(),NOW()),
-(3,3,3,4,1,'调用',0.90,NOW(),NOW()),
-(4,5,1,2,5,'负责',0.94,NOW(),NOW()),
-(5,6,1,3,5,'负责',0.91,NOW(),NOW()),
-(6,6,3,7,5,'调用',0.88,NOW(),NOW()),
-(7,8,1,2,8,'负责',0.93,NOW(),NOW()),
-(8,8,1,9,8,'负责',0.89,NOW(),NOW()),
-(9,9,3,10,8,'调用',0.87,NOW(),NOW()),
-(10,11,4,2,4,'前置',0.92,NOW(),NOW()),
-(11,12,1,11,4,'负责',0.90,NOW(),NOW()),
-(12,12,3,10,4,'调用',0.86,NOW(),NOW());
+INSERT INTO `tmp_entity_template` (`slot`,`entity_name`,`entity_type_id`,`use_region_prefix`,`description`) VALUES
+(1,'防汛指挥部',1,1,'统一指挥风险研判、预警发布和应急响应'),
+(2,'应急管理部门',1,1,'牵头组织人员转移与抢险力量协调'),
+(3,'气象部门',1,1,'负责监测预报和降雨趋势分析'),
+(4,'水利部门',1,1,'负责河道堤防巡查和水工程调度'),
+(5,'交通运输部门',1,1,'负责交通保通和重点路段管控'),
+(6,'风险研判',2,0,'研判雨情、水情、工情和险情'),
+(7,'预警发布',2,0,'面向防汛响应的预警信息发布'),
+(8,'人员转移',2,0,'组织危险区域群众转移避险'),
+(9,'冲锋舟',3,0,'用于涉水救援和转运'),
+(10,'沙袋',3,0,'用于封堵漫溢和临时加固'),
+(11,'应急照明设备',3,0,'用于夜间抢险和巡查照明'),
+(12,'排涝泵站',3,0,'用于城市内涝和低洼区域排水'),
+(13,'应急通信设备',3,0,'用于多部门协同联络'),
+(14,'无人机',3,0,'用于巡查侦察和灾情回传');
 
-INSERT INTO `kg_triple` (`id`,`subject_name`,`predicate_name`,`object_name`,`subject_entity_id`,`relation_id`,`object_entity_id`,`source_document_id`,`version_id`,`confidence`,`validation_status`,`create_time`,`update_time`) VALUES
-(1,'北京市防汛指挥部','负责','预警发布',1,1,2,1,2,0.92,1,NOW(),NOW()),
-(2,'北京市防汛指挥部','负责','人员转移',1,2,3,1,2,0.91,1,NOW(),NOW()),
-(3,'人员转移','调用','冲锋舟',3,3,4,1,2,0.90,1,NOW(),NOW()),
-(4,'浙江省防汛防台抗旱指挥部','负责','预警发布',5,4,2,5,2,0.94,1,NOW(),NOW()),
-(5,'浙江省应急管理厅','负责','人员转移',6,5,3,5,2,0.91,1,NOW(),NOW()),
-(6,'浙江省应急管理厅','调用','防汛物资仓库',6,6,7,5,2,0.88,1,NOW(),NOW()),
-(7,'广东省防总','负责','预警发布',8,7,2,8,2,0.93,1,NOW(),NOW()),
-(8,'广东省防总','负责','应急通信保障',8,8,9,8,2,0.89,1,NOW(),NOW()),
-(9,'应急通信保障','调用','应急照明设备',9,9,10,8,2,0.87,1,NOW(),NOW()),
-(10,'风险研判','前置','预警发布',11,10,2,4,1,0.92,1,NOW(),NOW()),
-(11,'江苏省防汛指挥部','负责','风险研判',12,11,11,4,1,0.90,1,NOW(),NOW()),
-(12,'江苏省防汛指挥部','调用','应急照明设备',12,12,10,4,1,0.86,2,NOW(),NOW());
+CREATE TEMPORARY TABLE `tmp_relation_template` (
+  `slot` INT PRIMARY KEY,
+  `subject_slot` INT NOT NULL,
+  `relation_type_id` BIGINT NOT NULL,
+  `relation_name` VARCHAR(50) NOT NULL,
+  `object_slot` INT NOT NULL
+);
+
+INSERT INTO `tmp_relation_template` (`slot`,`subject_slot`,`relation_type_id`,`relation_name`,`object_slot`) VALUES
+(1,1,1,'负责',6),
+(2,1,1,'负责',7),
+(3,2,1,'负责',8),
+(4,3,2,'协同',1),
+(5,4,2,'协同',1),
+(6,5,2,'协同',2),
+(7,6,4,'前置',7),
+(8,7,4,'前置',8),
+(9,8,3,'调用',9),
+(10,2,3,'调用',10),
+(11,1,3,'调用',11),
+(12,2,3,'调用',12),
+(13,2,3,'调用',13),
+(14,1,3,'调用',14);
+
+INSERT INTO `plan_document` (`id`,`title`,`region_id`,`plan_year`,`plan_type`,`source_url`,`file_id`,`file_name`,`file_path`,`content`,`preprocess_status`,`extraction_status`,`publish_org`,`approval_date`,`version_no`,`summary`,`create_by`,`create_time`,`update_time`)
+SELECT
+  1000 + r.id AS id,
+  CASE
+    WHEN r.id IN (1,2,9,10,11,13,19,20,21) THEN CONCAT(r.region_name, '防汛防台风应急预案')
+    WHEN r.id IN (17,23,24,25,26,29) THEN CONCAT(r.region_name, '山洪灾害防御应急预案')
+    ELSE CONCAT(r.region_name, '防汛应急预案')
+  END AS title,
+  r.id AS region_id,
+  2026 AS plan_year,
+  CASE
+    WHEN r.id IN (1,2,9,10,11,13,19,20,21) THEN '防汛防台风应急预案'
+    WHEN r.id IN (17,23,24,25,26,29) THEN '山洪灾害防御预案'
+    ELSE '防汛应急预案'
+  END AS plan_type,
+  CONCAT('https://example.com/plans/', r.region_code) AS source_url,
+  CASE WHEN r.id = 11 THEN 1 WHEN r.id = 19 THEN 2 ELSE NULL END AS file_id,
+  CASE WHEN r.id = 11 THEN '浙江省防汛应急预案.txt' WHEN r.id = 19 THEN '广东省防汛应急预案.txt' ELSE NULL END AS file_name,
+  CASE WHEN r.id = 11 THEN '/demo/files/zhejiang_plan.txt' WHEN r.id = 19 THEN '/demo/files/guangdong_plan.txt' ELSE NULL END AS file_path,
+  CONCAT(
+    '一、总则\n', r.region_name, '防汛指挥部负责统一指挥风险研判、预警发布、人员转移和应急响应。\n',
+    '二、会商联动\n', r.region_name, '应急管理部门、气象部门、水利部门、交通运输部门滚动开展联合会商，分析雨情、水情、工情和险情。\n',
+    '三、资源保障\n根据响应等级组织堤防巡查、群众转移、排涝抢险和应急通信保障，调用冲锋舟、沙袋、排涝泵站、应急照明设备、无人机等资源。',
+    CASE
+      WHEN r.id IN (1,2,9,10,11,13,19,20,21) THEN '\n四、沿海台风防御\n同步落实海堤巡查、避风港调度和沿海危险区域人员转移。'
+      WHEN r.id IN (17,23,24,25,26,29) THEN '\n四、山洪地灾防御\n强化山洪沟道巡查、地灾隐患点转移和监测预警联动。'
+      ELSE '\n四、城市内涝防控\n强化易涝点值守、重点地下空间防护和排水调度。'
+    END
+  ) AS content,
+  1 AS preprocess_status,
+  3 AS extraction_status,
+  CASE WHEN r.id IN (1,2,9,22) THEN CONCAT(r.region_name, '应急管理局') ELSE CONCAT(r.region_name, '应急管理厅') END AS publish_org,
+  DATE_FORMAT(DATE_ADD('2026-01-01', INTERVAL r.id DAY), '%Y-%m-%d') AS approval_date,
+  CONCAT('V', 1 + MOD(r.id, 3), '.', MOD(r.id, 2)) AS version_no,
+  CONCAT('覆盖', r.region_name, '防汛组织体系、监测预警、响应处置与资源保障链路，可用于跨省知识图谱检索与推理。') AS summary,
+  1 AS create_by,
+  NOW(),
+  NOW()
+FROM `region` r
+ORDER BY r.id;
+
+INSERT INTO `plan_section` (`id`,`document_id`,`section_no`,`section_title`,`section_level`,`section_content`,`word_count`,`create_time`,`update_time`)
+SELECT
+  5000 + base.region_id * 10 + base.section_idx AS id,
+  base.document_id,
+  CONCAT('S00', base.section_idx) AS section_no,
+  base.section_title,
+  1 AS section_level,
+  base.section_content,
+  CHAR_LENGTH(base.section_content) AS word_count,
+  NOW(),
+  NOW()
+FROM (
+  SELECT r.id AS region_id, 1000 + r.id AS document_id, 1 AS section_idx, '一、总则' AS section_title,
+         CONCAT(r.region_name, '防汛指挥部负责统一指挥风险研判、预警发布、人员转移和应急响应。') AS section_content
+  FROM `region` r
+  UNION ALL
+  SELECT r.id, 1000 + r.id, 2, '二、会商联动',
+         CONCAT(r.region_name, '应急管理部门、气象部门、水利部门、交通运输部门联合会商，滚动分析雨情、水情、工情和险情。')
+  FROM `region` r
+  UNION ALL
+  SELECT r.id, 1000 + r.id, 3, '三、响应措施',
+         CONCAT('根据响应级别组织预警发布、人员转移、堤防巡查、排涝抢险和应急通信保障，调用冲锋舟、沙袋、应急照明设备、排涝泵站。')
+  FROM `region` r
+  UNION ALL
+  SELECT r.id, 1000 + r.id, 4, '四、专项防御',
+         CASE
+           WHEN r.id IN (1,2,9,10,11,13,19,20,21) THEN '同步落实台风防御、海堤巡查和沿海危险区域人员转移。'
+           WHEN r.id IN (17,23,24,25,26,29) THEN '强化山洪沟道巡查、地灾隐患点转移和监测预警联动。'
+           ELSE '强化易涝点值守、重点地下空间防护和排水调度。'
+         END
+  FROM `region` r
+) base
+ORDER BY base.region_id, base.section_idx;
+
+INSERT INTO `extraction_task` (`id`,`document_id`,`task_name`,`model_name`,`prompt_template`,`task_status`,`progress_percent`,`extracted_count`,`started_at`,`finished_at`,`error_message`,`create_by`,`create_time`,`update_time`)
+SELECT
+  6000 + r.id AS id,
+  1000 + r.id AS document_id,
+  CONCAT(r.region_name, '预案首轮抽取') AS task_name,
+  '应急抽取助手-Mock' AS model_name,
+  '请抽取主体、任务、资源、前置关系与跨部门协同链路' AS prompt_template,
+  2 AS task_status,
+  100 AS progress_percent,
+  14 AS extracted_count,
+  NOW(),
+  NOW(),
+  NULL,
+  1 AS create_by,
+  NOW(),
+  NOW()
+FROM `region` r
+ORDER BY r.id;
+
+INSERT INTO `extraction_task` (`id`,`document_id`,`task_name`,`model_name`,`prompt_template`,`task_status`,`progress_percent`,`extracted_count`,`started_at`,`finished_at`,`error_message`,`create_by`,`create_time`,`update_time`) VALUES
+(7001,1011,'浙江省补充抽取任务','应急抽取助手-Mock','补充细化台风防御和应急通信资源',0,0,0,NULL,NULL,NULL,3,NOW(),NOW()),
+(7002,1019,'广东省沿海资源增强抽取','应急抽取助手-Mock','补充沿海危险区域联动资源与转移链路',1,66,9,NOW(),NULL,NULL,3,NOW(),NOW()),
+(7003,1023,'四川省山洪专项抽取重试','应急抽取助手-Mock','补充山洪沟道预警和地灾隐患转移链路',3,100,0,NOW(),NOW(),'原始预案段落中专题附录缺失，待人工补录后重试。',3,NOW(),NOW());
+
+INSERT INTO `kg_entity` (`id`,`entity_name`,`entity_type_id`,`region_id`,`source_document_id`,`description`,`confidence`,`status`,`create_time`,`update_time`)
+SELECT
+  20000 + r.id * 100 + t.slot AS id,
+  CASE WHEN t.use_region_prefix = 1 THEN CONCAT(r.region_name, t.entity_name) ELSE t.entity_name END AS entity_name,
+  t.entity_type_id,
+  r.id AS region_id,
+  1000 + r.id AS source_document_id,
+  CASE
+    WHEN t.use_region_prefix = 1 THEN CONCAT(r.region_name, t.description)
+    ELSE CONCAT(t.description, '（', r.region_name, '）')
+  END AS description,
+  ROUND(0.90 + MOD(r.id + t.slot, 6) * 0.01, 2) AS confidence,
+  1 AS status,
+  NOW(),
+  NOW()
+FROM `region` r
+JOIN `tmp_entity_template` t
+ORDER BY r.id, t.slot;
+
+INSERT INTO `kg_relation` (`id`,`subject_entity_id`,`relation_type_id`,`object_entity_id`,`source_document_id`,`relation_desc`,`confidence`,`create_time`,`update_time`)
+SELECT
+  30000 + r.id * 100 + rel.slot AS id,
+  20000 + r.id * 100 + rel.subject_slot AS subject_entity_id,
+  rel.relation_type_id,
+  20000 + r.id * 100 + rel.object_slot AS object_entity_id,
+  1000 + r.id AS source_document_id,
+  rel.relation_name AS relation_desc,
+  ROUND(0.90 + MOD(r.id + rel.slot, 6) * 0.01, 2) AS confidence,
+  NOW(),
+  NOW()
+FROM `region` r
+JOIN `tmp_relation_template` rel
+ORDER BY r.id, rel.slot;
+
+INSERT INTO `kg_triple` (`id`,`subject_name`,`predicate_name`,`object_name`,`subject_entity_id`,`relation_id`,`object_entity_id`,`source_document_id`,`version_id`,`confidence`,`validation_status`,`create_time`,`update_time`)
+SELECT
+  40000 + r.id * 100 + rel.slot AS id,
+  CASE WHEN subj.use_region_prefix = 1 THEN CONCAT(r.region_name, subj.entity_name) ELSE subj.entity_name END AS subject_name,
+  rel.relation_name AS predicate_name,
+  CASE WHEN obj.use_region_prefix = 1 THEN CONCAT(r.region_name, obj.entity_name) ELSE obj.entity_name END AS object_name,
+  20000 + r.id * 100 + rel.subject_slot AS subject_entity_id,
+  30000 + r.id * 100 + rel.slot AS relation_id,
+  20000 + r.id * 100 + rel.object_slot AS object_entity_id,
+  1000 + r.id AS source_document_id,
+  2 AS version_id,
+  ROUND(0.90 + MOD(r.id + rel.slot, 6) * 0.01, 2) AS confidence,
+  CASE
+    WHEN r.id IN (10,19,23) AND rel.slot IN (11,12) THEN 2
+    ELSE 1
+  END AS validation_status,
+  NOW(),
+  NOW()
+FROM `region` r
+JOIN `tmp_relation_template` rel
+JOIN `tmp_entity_template` subj ON subj.slot = rel.subject_slot
+JOIN `tmp_entity_template` obj ON obj.slot = rel.object_slot
+ORDER BY r.id, rel.slot;
 
 INSERT INTO `knowledge_conflict` (`id`,`triple_id`,`conflict_type`,`conflict_desc`,`status`,`suggested_resolution`,`create_time`,`update_time`) VALUES
-(1,12,'资源冲突','江苏省防汛指挥部在不同版本预案中对照明资源调用对象存在差异。',0,'建议核验最新生效版预案，并结合地市物资目录统一客体名称。',NOW(),NOW()),
-(2,8,'职责边界冲突','广东省防总与地方应急通信保障组在通信保障职责边界表述不一致。',1,'已通过人工确认保留省级总指挥部统筹、专项保障组执行的双层结构。',NOW(),NOW());
+(8001,41011,'资源配置冲突','江苏省预案中夜间抢险照明资源与部分市级预案表述不一致。',0,'建议核验最新生效版省级预案，并统一照明资源目录命名。',NOW(),NOW()),
+(8002,41912,'排涝职责边界冲突','广东省预案中排涝泵站调度主体在不同附件中存在职责边界差异。',1,'已确认由省级防汛指挥体系统筹、属地部门具体执行。',NOW(),NOW()),
+(8003,42311,'山洪夜间巡查资源冲突','四川省山洪防御预案中夜间巡查资源调用方式与专题附录存在差异。',0,'建议补录专项附录后重新校验资源调用链。',NOW(),NOW()),
+(8004,42312,'排涝资源适配冲突','四川省山洪场景是否直接调用排涝泵站存在适配争议。',0,'建议按流域洪水与山洪场景拆分资源规则。',NOW(),NOW());
 
-INSERT INTO `knowledge_completion` (`id`,`document_id`,`completion_type`,`missing_subject`,`missing_predicate`,`missing_object`,`suggestion_content`,`status`,`apply_result`,`create_time`,`update_time`) VALUES
-(1,6,'知识补全','安徽省通信保障组','负责','应急通信保障','建议补充通信保障主体，完善夜间救援和跨区域联动保障。',0,NULL,NOW(),NOW()),
-(2,7,'知识补全','湖北省防汛抗旱指挥部','调用','应急照明设备','建议补充夜间巡堤与抢险照明资源。',0,NULL,NOW(),NOW()),
-(3,8,'知识补全','广东省防总','调用','应急救援直升机','建议补充沿海孤岛和高风险区域空中救援资源。',1,'已生成补全三元组：广东省防总 - 调用 - 应急救援直升机',NOW(),NOW());
+INSERT INTO `knowledge_completion` (`id`,`document_id`,`completion_type`,`missing_subject`,`missing_predicate`,`missing_object`,`suggestion_content`,`status`,`apply_result`,`create_time`,`update_time`)
+SELECT
+  50000 + r.id * 10 + 1 AS id,
+  1000 + r.id AS document_id,
+  '知识补全' AS completion_type,
+  CONCAT(r.region_name, '通信保障组') AS missing_subject,
+  '负责' AS missing_predicate,
+  '应急通信保障' AS missing_object,
+  CONCAT('建议补充', r.region_name, '通信保障组与指挥体系、资源调度之间的职责关系。') AS suggestion_content,
+  0 AS status,
+  NULL AS apply_result,
+  NOW(),
+  NOW()
+FROM `region` r
+UNION ALL
+SELECT
+  50000 + r.id * 10 + 2 AS id,
+  1000 + r.id AS document_id,
+  '知识补全' AS completion_type,
+  CONCAT(r.region_name, '防汛指挥部') AS missing_subject,
+  '调用' AS missing_predicate,
+  '无人机' AS missing_object,
+  CONCAT('建议补充', r.region_name, '无人机巡查、灾情回传与重点部位巡检链路。') AS suggestion_content,
+  CASE WHEN r.id IN (11,19,23) THEN 1 ELSE 0 END AS status,
+  CASE WHEN r.id IN (11,19,23) THEN CONCAT('已生成补全三元组：', r.region_name, '防汛指挥部 - 调用 - 无人机') ELSE NULL END AS apply_result,
+  NOW(),
+  NOW()
+FROM `region` r;
 
 INSERT INTO `graph_version` (`id`,`version_name`,`version_no`,`source_desc`,`node_count`,`relation_count`,`triple_count`,`quality_score`,`published_status`,`create_time`,`update_time`) VALUES
-(1,'开题阶段图谱基线版','v2026.03', '基于首批 4 份预案抽取结果生成',8,8,8,88.50,2,NOW(),NOW()),
-(2,'答辩演示版','v2026.04', '结合 10 份预案演示数据、冲突检测与补全结果生成',12,12,12,93.00,1,NOW(),NOW());
+(1,'样本验证版','v2026.03','基于首批 8 个省级预案的抽取样本形成基线图谱。',96,112,112,88.50,2,NOW(),NOW());
+
+INSERT INTO `graph_version` (`id`,`version_name`,`version_no`,`source_desc`,`node_count`,`relation_count`,`triple_count`,`quality_score`,`published_status`,`create_time`,`update_time`)
+SELECT
+  2 AS id,
+  '31省整合演示版' AS version_name,
+  'v2026.04' AS version_no,
+  CONCAT('覆盖 ', COUNT(*), ' 个省级单位预案，支持区域检索、知识问答、冲突检测、知识补全与 Neo4j 图查询同步。') AS source_desc,
+  (SELECT COUNT(*) FROM `kg_entity`) AS node_count,
+  (SELECT COUNT(*) FROM `kg_relation`) AS relation_count,
+  (SELECT COUNT(*) FROM `kg_triple`) AS triple_count,
+  96.20 AS quality_score,
+  1 AS published_status,
+  NOW(),
+  NOW()
+FROM `region`;
 
 INSERT INTO `ai_call_record` (`id`,`biz_type`,`biz_id`,`provider_name`,`project_id`,`request_prompt`,`response_text`,`call_status`,`duration_ms`,`error_message`,`create_time`) VALUES
-(1,'EXTRACTION',1,'mock','emergency_plan_kg','请抽取北京市预案中的主体、任务、资源与关系。','已生成 6 条示例三元组。',1,118,NULL,NOW()),
-(2,'QA',8,'mock','emergency_plan_kg','广东预案中哪些主体负责通信保障？','广东省防总负责统筹通信保障任务，并可调用照明设备。',1,103,NULL,NOW()),
-(3,'EXTRACTION',5,'mock','emergency_plan_kg','执行广西预案抽取。','原始文本结构不足，建议补录正文后重试。',0,96,'示例失败记录',NOW());
+(1,'EXTRACTION',6011,'mock','emergency_plan_kg','抽取浙江省预案中的主体、任务、资源与关系链路。','已生成 14 条结构化三元组，并产出通信保障与无人机巡查补全建议。',1,118,NULL,NOW()),
+(2,'EXTRACTION',6019,'mock','emergency_plan_kg','抽取广东省预案中的沿海台风防御与跨部门协同链路。','已生成 14 条三元组，识别沿海危险区域转移与排涝资源调用。',1,126,NULL,NOW()),
+(3,'QA',1019,'mock','emergency_plan_kg','广东省预案中哪些主体负责预警发布与人员转移？','广东省防汛指挥部负责预警发布，广东省应急管理部门负责人员转移，并与气象、水利、交通运输部门协同。',1,104,NULL,NOW()),
+(4,'REASONING',1023,'mock','emergency_plan_kg','四川省山洪预案中风险研判如何影响人员转移？','风险研判前置于预警发布，预警发布再前置于人员转移，形成典型的山洪转移推理链。',1,97,NULL,NOW()),
+(5,'EXTRACTION',7003,'mock','emergency_plan_kg','重试四川省山洪专项抽取。','专题附录缺失，需补录后重新执行。',0,91,'示例失败记录',NOW());
 
 INSERT INTO `sys_operation_log` (`id`,`module_name`,`operation_type`,`operator_name`,`operator_id`,`content`,`ip_address`,`create_time`) VALUES
 (1,'认证中心','登录','系统管理员',1,'系统管理员 登录系统','127.0.0.1',NOW()),
-(2,'预案管理','新增','数据维护员',3,'新增预案：浙江省防汛防台抗旱应急预案','127.0.0.1',NOW()),
-(3,'预案管理','预处理','数据维护员',3,'完成预案分段：浙江省防汛防台抗旱应急预案，共 3 段','127.0.0.1',NOW()),
-(4,'抽取任务','执行','数据维护员',3,'执行抽取任务：浙江预案首轮抽取，生成三元组 7 条','127.0.0.1',NOW()),
-(5,'知识补全','应用','知识分析员',2,'已生成补全三元组：广东省防总 - 调用 - 应急救援直升机','127.0.0.1',NOW()),
-(6,'图谱版本','创建','系统管理员',1,'创建图谱版本：答辩演示版','127.0.0.1',NOW());
+(2,'预案管理','导入','数据维护员',3,'批量导入 31 个省级防汛预案并完成统一格式整理','127.0.0.1',NOW()),
+(3,'预案管理','预处理','数据维护员',3,'完成 31 个省级预案分段，共生成 124 个文本分段','127.0.0.1',NOW()),
+(4,'抽取任务','执行','数据维护员',3,'执行省级预案抽取任务，共生成 434 条图谱关系链路','127.0.0.1',NOW()),
+(5,'知识补全','应用','知识分析员',2,'已应用浙江、广东、四川三地无人机巡查补全建议','127.0.0.1',NOW()),
+(6,'图谱版本','创建','系统管理员',1,'创建图谱版本：31省整合演示版，并支持 Neo4j 同步','127.0.0.1',NOW());
+
+DROP TEMPORARY TABLE IF EXISTS `tmp_relation_template`;
+DROP TEMPORARY TABLE IF EXISTS `tmp_entity_template`;

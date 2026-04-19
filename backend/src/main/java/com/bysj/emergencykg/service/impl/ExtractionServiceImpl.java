@@ -191,22 +191,35 @@ public class ExtractionServiceImpl implements ExtractionService {
     }
 
     private List<RuleTriple> buildRuleTriples(String regionName, PlanDocument document) {
+        String commandCenter = regionName + "防汛指挥部";
+        String emergencyDept = regionName + "应急管理部门";
+        String weatherDept = regionName + "气象部门";
+        String waterDept = regionName + "水利部门";
+        String transportDept = regionName + "交通运输部门";
         List<RuleTriple> triples = new ArrayList<>();
-        triples.add(new RuleTriple(regionName + "防汛指挥部", "机构", "负责", "预警发布", "任务"));
-        triples.add(new RuleTriple(regionName + "应急管理厅", "机构", "负责", "人员转移", "任务"));
-        triples.add(new RuleTriple(regionName + "气象局", "机构", "协同", regionName + "防汛指挥部", "机构"));
-        triples.add(new RuleTriple(regionName + "水利厅", "机构", "调用", "防汛物资仓库", "资源"));
-        triples.add(new RuleTriple("预警发布", "任务", "前置", "风险研判", "任务"));
+        triples.add(new RuleTriple(commandCenter, "机构", "负责", "风险研判", "任务"));
+        triples.add(new RuleTriple(commandCenter, "机构", "负责", "预警发布", "任务"));
+        triples.add(new RuleTriple(emergencyDept, "机构", "负责", "人员转移", "任务"));
+        triples.add(new RuleTriple(weatherDept, "机构", "协同", commandCenter, "机构"));
+        triples.add(new RuleTriple(waterDept, "机构", "协同", commandCenter, "机构"));
+        triples.add(new RuleTriple(transportDept, "机构", "协同", emergencyDept, "机构"));
+        triples.add(new RuleTriple("风险研判", "任务", "前置", "预警发布", "任务"));
+        triples.add(new RuleTriple("预警发布", "任务", "前置", "人员转移", "任务"));
         triples.add(new RuleTriple("人员转移", "任务", "调用", "冲锋舟", "资源"));
+        triples.add(new RuleTriple(commandCenter, "机构", "调用", "应急照明设备", "资源"));
+        triples.add(new RuleTriple(emergencyDept, "机构", "调用", "排涝泵站", "资源"));
         if (StringUtils.hasText(document.getContent()) && document.getContent().contains("沙袋")) {
-            triples.add(new RuleTriple(regionName + "应急管理厅", "机构", "调用", "沙袋", "资源"));
+            triples.add(new RuleTriple(emergencyDept, "机构", "调用", "沙袋", "资源"));
+        }
+        if (StringUtils.hasText(document.getContent()) && (document.getContent().contains("通信") || document.getContent().contains("联络"))) {
+            triples.add(new RuleTriple(emergencyDept, "机构", "调用", "应急通信设备", "资源"));
         }
         return triples;
     }
 
     private Long findOrCreateEntity(String name, String typeName, Long regionId, Long documentId, Map<String, Long> typeIdMap) {
         Long entityTypeId = typeIdMap.getOrDefault(typeName, typeIdMap.values().stream().findFirst().orElse(null));
-        KgEntity existing = kgEntityMapper.selectOne(new LambdaQueryWrapper<KgEntity>().eq(KgEntity::getEntityName, name).eq(KgEntity::getEntityTypeId, entityTypeId).last("limit 1"));
+        KgEntity existing = kgEntityMapper.selectOne(new LambdaQueryWrapper<KgEntity>().eq(KgEntity::getEntityName, name).eq(KgEntity::getEntityTypeId, entityTypeId).eq(regionId != null, KgEntity::getRegionId, regionId).last("limit 1"));
         if (existing != null) {
             return existing.getId();
         }

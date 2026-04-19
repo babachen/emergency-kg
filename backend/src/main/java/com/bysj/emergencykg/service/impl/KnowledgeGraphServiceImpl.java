@@ -135,13 +135,10 @@ public class KnowledgeGraphServiceImpl implements KnowledgeGraphService {
                 .and(StringUtils.hasText(queryDTO.getKeyword()), w -> w.like(KgTriple::getSubjectName, queryDTO.getKeyword()).or().like(KgTriple::getPredicateName, queryDTO.getKeyword()).or().like(KgTriple::getObjectName, queryDTO.getKeyword()))
                 .orderByDesc(KgTriple::getCreateTime);
         Page<KgTriple> page = kgTripleMapper.selectPage(new Page<>(queryDTO.getCurrent(), queryDTO.getPageSize()), wrapper);
-        Map<Long, String> docMap = planDocumentMapper.selectList(new LambdaQueryWrapper<PlanDocument>()).stream().collect(Collectors.toMap(PlanDocument::getId, PlanDocument::getTitle));
+        Map<Long, PlanDocument> docMap = loadDocumentMap();
+        Map<Long, String> regionMap = loadRegionNameMap();
         Map<Long, String> versionMap = graphVersionMapper.selectList(new LambdaQueryWrapper<GraphVersion>()).stream().collect(Collectors.toMap(GraphVersion::getId, GraphVersion::getVersionName));
-        return PageResult.of(page, triple -> {
-            KgVO.TripleVO vo = new KgVO.TripleVO();
-            vo.setId(triple.getId()); vo.setSubjectName(triple.getSubjectName()); vo.setPredicateName(triple.getPredicateName()); vo.setObjectName(triple.getObjectName()); vo.setSourceDocumentId(triple.getSourceDocumentId()); vo.setSourceDocumentTitle(docMap.get(triple.getSourceDocumentId())); vo.setVersionId(triple.getVersionId()); vo.setVersionName(versionMap.get(triple.getVersionId())); vo.setConfidence(triple.getConfidence()); vo.setValidationStatus(triple.getValidationStatus()); vo.setValidationStatusText(validationText(triple.getValidationStatus())); vo.setCreateTime(triple.getCreateTime());
-            return vo;
-        });
+        return PageResult.of(page, triple -> buildTripleVO(triple, docMap, regionMap, versionMap));
     }
 
     @Override
@@ -235,7 +232,27 @@ public class KnowledgeGraphServiceImpl implements KnowledgeGraphService {
         graphVersionMapper.update(null, new com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<GraphVersion>().eq(GraphVersion::getPublishedStatus, 1).set(GraphVersion::getPublishedStatus, 2).set(GraphVersion::getUpdateTime, LocalDateTime.now()));
         GraphVersion version = new GraphVersion();
         version.setVersionName(dto.getVersionName()); version.setVersionNo(dto.getVersionNo()); version.setSourceDesc(dto.getSourceDesc()); version.setNodeCount(Math.toIntExact(kgEntityMapper.selectCount(new LambdaQueryWrapper<>()))); version.setRelationCount(Math.toIntExact(kgRelationMapper.selectCount(new LambdaQueryWrapper<>()))); version.setTripleCount(Math.toIntExact(kgTripleMapper.selectCount(new LambdaQueryWrapper<>()))); version.setQualityScore(BigDecimal.valueOf(Math.min(99, 88 + graphVersionMapper.selectCount(new LambdaQueryWrapper<>())))); version.setPublishedStatus(1); version.setCreateTime(LocalDateTime.now()); version.setUpdateTime(LocalDateTime.now()); graphVersionMapper.insert(version);
+        kgTripleMapper.update(null, new com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<KgTriple>().set(KgTriple::getVersionId, version.getId()).set(KgTriple::getUpdateTime, LocalDateTime.now()));
+        try {
+            syncGraphStoreSnapshot("创建图谱版本：" + dto.getVersionName());
+        } catch (Exception ex) {
+            operationLogService.log("图谱版本", "同步", "图谱版本已创建，但同步 Neo4j 失败：" + ex.getMessage());
+        }
         operationLogService.log("图谱版本", "创建", "创建图谱版本：" + dto.getVersionName());
+    }
+
+    @Override
+    public void syncGraphStoreSnapshot(String trigger) {
+        if (!neo4jGraphStoreClient.available()) {
+            return;
+        }
+        List<KgVO.TripleVO> syncTriples = listSyncTriples();
+        if (syncTriples.isEmpty()) {
+            operationLogService.log("图谱版本", "同步", "未检测到可同步的图谱三元组，触发方式：" + trigger);
+            return;
+        }
+        neo4jGraphStoreClient.syncVersion(resolveSyncVersionId(), syncTriples);
+        operationLogService.log("图谱版本", "同步", "已同步 " + syncTriples.size() + " 条三元组到 Neo4j，触发方式：" + trigger);
     }
 
     private List<KgTriple> queryRelevantTriples(String question, Long documentId, Long regionId) {
@@ -271,11 +288,63 @@ public class KnowledgeGraphServiceImpl implements KnowledgeGraphService {
 
     private Long findOrCreateEntity(String name, String typeName, Long regionId, Long documentId, Map<String, Long> typeIdMap) {
         Long entityTypeId = typeIdMap.getOrDefault(typeName, typeIdMap.values().stream().findFirst().orElse(null));
-        KgEntity existing = kgEntityMapper.selectOne(new LambdaQueryWrapper<KgEntity>().eq(KgEntity::getEntityName, name).eq(KgEntity::getEntityTypeId, entityTypeId).last("limit 1"));
+        KgEntity existing = kgEntityMapper.selectOne(new LambdaQueryWrapper<KgEntity>().eq(KgEntity::getEntityName, name).eq(KgEntity::getEntityTypeId, entityTypeId).eq(regionId != null, KgEntity::getRegionId, regionId).last("limit 1"));
         if (existing != null) { return existing.getId(); }
         KgEntity entity = new KgEntity();
         entity.setEntityName(name); entity.setEntityTypeId(entityTypeId); entity.setRegionId(regionId); entity.setSourceDocumentId(documentId); entity.setDescription("由图谱维护动作生成"); entity.setConfidence(BigDecimal.valueOf(0.88)); entity.setStatus(1); entity.setCreateTime(LocalDateTime.now()); entity.setUpdateTime(LocalDateTime.now()); kgEntityMapper.insert(entity);
         return entity.getId();
+    }
+
+    private List<KgVO.TripleVO> listSyncTriples() {
+        Map<Long, PlanDocument> docMap = loadDocumentMap();
+        Map<Long, String> regionMap = loadRegionNameMap();
+        Map<Long, String> versionMap = graphVersionMapper.selectList(new LambdaQueryWrapper<GraphVersion>()).stream()
+                .collect(Collectors.toMap(GraphVersion::getId, GraphVersion::getVersionName, (a, b) -> a));
+        return kgTripleMapper.selectList(new LambdaQueryWrapper<KgTriple>().orderByAsc(KgTriple::getId)).stream()
+                .map(triple -> buildTripleVO(triple, docMap, regionMap, versionMap))
+                .collect(Collectors.toList());
+    }
+
+    private Long resolveSyncVersionId() {
+        GraphVersion published = graphVersionMapper.selectOne(new LambdaQueryWrapper<GraphVersion>()
+                .eq(GraphVersion::getPublishedStatus, 1)
+                .orderByDesc(GraphVersion::getCreateTime)
+                .last("limit 1"));
+        if (published != null) {
+            return published.getId();
+        }
+        GraphVersion latest = graphVersionMapper.selectOne(new LambdaQueryWrapper<GraphVersion>()
+                .orderByDesc(GraphVersion::getCreateTime)
+                .last("limit 1"));
+        return latest != null ? latest.getId() : null;
+    }
+
+    private KgVO.TripleVO buildTripleVO(KgTriple triple, Map<Long, PlanDocument> docMap, Map<Long, String> regionMap, Map<Long, String> versionMap) {
+        KgVO.TripleVO vo = new KgVO.TripleVO();
+        PlanDocument document = docMap.get(triple.getSourceDocumentId());
+        vo.setId(triple.getId());
+        vo.setSubjectName(triple.getSubjectName());
+        vo.setPredicateName(triple.getPredicateName());
+        vo.setObjectName(triple.getObjectName());
+        vo.setSourceDocumentId(triple.getSourceDocumentId());
+        vo.setSourceDocumentTitle(document != null ? document.getTitle() : null);
+        vo.setRegionId(document != null ? document.getRegionId() : null);
+        vo.setRegionName(document != null ? regionMap.get(document.getRegionId()) : null);
+        vo.setVersionId(triple.getVersionId());
+        vo.setVersionName(versionMap.get(triple.getVersionId()));
+        vo.setConfidence(triple.getConfidence());
+        vo.setValidationStatus(triple.getValidationStatus());
+        vo.setValidationStatusText(validationText(triple.getValidationStatus()));
+        vo.setCreateTime(triple.getCreateTime());
+        return vo;
+    }
+
+    private Map<Long, PlanDocument> loadDocumentMap() {
+        return planDocumentMapper.selectList(new LambdaQueryWrapper<PlanDocument>()).stream().collect(Collectors.toMap(PlanDocument::getId, document -> document));
+    }
+
+    private Map<Long, String> loadRegionNameMap() {
+        return regionMapper.selectList(new LambdaQueryWrapper<Region>()).stream().collect(Collectors.toMap(Region::getId, Region::getRegionName));
     }
 
     private KgVO.OntologyVO toEntityTypeVO(EntityType entityType) {

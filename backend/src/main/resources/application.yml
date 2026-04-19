@@ -42,6 +42,7 @@ app:
     mock-enabled: true
   neo4j:
     enabled: false
+    sync-on-startup: true
     uri: bolt://127.0.0.1:7687
     username: neo4j
     password: 12345678

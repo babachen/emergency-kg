@@ -29,15 +29,21 @@ public class MysqlGraphStoreClient implements GraphStoreClient {
 
     @Override
     public KgVO.GraphVO queryGraph(Long regionId, Long documentId, String keyword) {
+        Set<Long> docIds = null;
+        if (regionId != null) {
+            docIds = planDocumentMapper.selectList(new LambdaQueryWrapper<PlanDocument>().eq(PlanDocument::getRegionId, regionId)).stream().map(PlanDocument::getId).collect(Collectors.toSet());
+            if (docIds.isEmpty()) {
+                KgVO.GraphVO empty = new KgVO.GraphVO();
+                empty.setMessage("当前区域暂无已入库图谱数据");
+                return empty;
+            }
+        }
         LambdaQueryWrapper<KgTriple> wrapper = new LambdaQueryWrapper<KgTriple>()
                 .eq(documentId != null, KgTriple::getSourceDocumentId, documentId)
+                .in(docIds != null, KgTriple::getSourceDocumentId, docIds)
                 .and(StringUtils.hasText(keyword), w -> w.like(KgTriple::getSubjectName, keyword).or().like(KgTriple::getPredicateName, keyword).or().like(KgTriple::getObjectName, keyword))
                 .orderByDesc(KgTriple::getCreateTime).last("limit 120");
         List<KgTriple> triples = kgTripleMapper.selectList(wrapper);
-        if (regionId != null) {
-            Set<Long> docIds = planDocumentMapper.selectList(new LambdaQueryWrapper<PlanDocument>().eq(PlanDocument::getRegionId, regionId)).stream().map(PlanDocument::getId).collect(Collectors.toSet());
-            triples = triples.stream().filter(t -> docIds.contains(t.getSourceDocumentId())).collect(Collectors.toList());
-        }
         KgVO.GraphVO vo = new KgVO.GraphVO();
         Map<String, KgVO.GraphNodeVO> nodes = new LinkedHashMap<>();
         for (KgTriple triple : triples) {
@@ -50,7 +56,7 @@ public class MysqlGraphStoreClient implements GraphStoreClient {
             vo.getLinks().add(link);
         }
         vo.setNodes(new ArrayList<>(nodes.values()));
-        vo.setMessage("当前使用 MySQL 图谱降级查询，共返回 " + vo.getLinks().size() + " 条关系");
+        vo.setMessage("当前使用 MySQL 图谱降级查询，共返回 " + vo.getNodes().size() + " 个节点、" + vo.getLinks().size() + " 条关系");
         return vo;
     }
 
